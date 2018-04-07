@@ -62,6 +62,28 @@ section .bss
 
 %endmacro
 
+
+
+%macro strlen 1
+;**************************************************************************************************
+; input: rax as pointer to a string
+; output: rdx as an integer
+; function: finds the length of the string pointed by rax and saves the length in rdx
+;**************************************************************************************************
+	mov rax, %1
+	push rax
+	push rcx
+
+	sub rdx, rdx
+	%%fnc_string_length_loop:
+        	inc rax
+        	inc rdx
+        	mov cl, [rax]
+        	cmp cl, 0
+        	jne %%fnc_string_length_loop
+	pop rcx
+	pop rax
+%endmacro
 SYS_EXIT equ 60
 
 
