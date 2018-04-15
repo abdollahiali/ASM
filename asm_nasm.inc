@@ -1,6 +1,15 @@
 section .bss
 	char_space resb 100
 
+;-----------------------------List of Macros---------------------------------
+; 	MACRO								DESCRIPTION
+; 	exit
+; 	printint val
+; 	strlen str 				the str is a pointer to the string and the string ends with 0
+; 	str2int str						 output:rax
+; 	al_power_bl 						al^bl, output: rax
+;----------------------------------------------------------------------------
+
 
 %macro exit 0
 	mov rax, SYS_EXIT
