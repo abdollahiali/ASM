@@ -17,12 +17,13 @@ _start:
 	
 	mov r8, 1; counter
 
+	; print all the arguments one by one
 	_start_loop:
 		printstr str2
 		printint r8
 		printstr str3
 		
-		pop rsi
+		pop rsi ; pops the address of the next argument into rsi
 		printstr rsi
 		printstr new_line
 		inc r8
