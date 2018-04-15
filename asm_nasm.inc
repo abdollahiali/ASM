@@ -122,15 +122,16 @@ section .bss
 
 %macro str2int 1
 ;**************************************************************************************************
-; input: string of an integer stored in the address pointed by rax
+; input: pointer to the string of an integer stored
 ; output: the integer is saved in rax
 ; function: coverts the string of an integer to integer
 ;**************************************************************************************************
-	mov rax, %1
+	push rax
 	push rdx
 	push rcx
 	push rbx
 	push r8
+	mov rax, %1
 
 	push rax
 	strlen rax ; stores in rdx, the length of the string pointed by rax
@@ -174,6 +175,7 @@ section .bss
 	pop rbx
 	pop rcx
 	pop rdx
+	pop rax
 %endmacro
 
 
