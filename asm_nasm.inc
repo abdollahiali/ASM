@@ -5,7 +5,7 @@ section .bss
 ; 	MACRO								DESCRIPTION
 ; 	exit
 ; 	printint val
-; 	strlen str 				the str is a pointer to the string and the string ends with 0
+; 	strlen str 				output: rdx	the str is a pointer to the string and the string ends with 0
 ; 	str2int str						 output:rax
 ; 	al_power_bl 						al^bl, output: rax
 ;----------------------------------------------------------------------------
@@ -17,6 +17,31 @@ section .bss
 	syscall
 %endmacro
 
+
+%macro printstr 1
+;**************************************************************************************************
+; input: a pointer to a string
+; output: none
+; function: prints the string
+;**************************************************************************************************
+
+	push rax
+	push rdi
+	push rsi
+	push rdx
+	
+	mov rax, 1
+	mov rdi, 1
+	mov rsi, %1 ; rsi now hold the prointer to the the string
+	strlen rsi   ; rdx now hold the length of the string
+	syscall
+
+	pop rdx
+	pop rsi
+	pop rdi
+	pop rax
+
+%endmacro
 
 %macro printint 1
 
@@ -78,9 +103,9 @@ section .bss
 ; output: rdx as an integer
 ; function: finds the length of the string pointed by rax and saves the length in rdx
 ;**************************************************************************************************
-	mov rax, %1
 	push rax
 	push rcx
+	mov rax, %1
 
 	sub rdx, rdx
 	%%fnc_string_length_loop:
