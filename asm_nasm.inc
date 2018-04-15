@@ -46,17 +46,18 @@ section .bss
 %macro printint 1
 
 ;**************************************************************************************************
-; input: integer stored in rax
+; input: immediate integer or a register or address
 ; output: none
 ; function: prints the integer
-;**************************************************************************************************
-	mov rax, %1
+;**************************************************************************************************	
 	push rcx
 	push rbx
 	push rdx
 	push rax
 	push rdi
 	push rsi
+
+	mov rax, %1
 
 	mov rcx, char_space
 	mov rbx, 10
