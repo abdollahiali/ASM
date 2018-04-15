@@ -35,7 +35,6 @@ section .bss
 
 	mov rcx, char_space
 	mov rbx, 10
-	mov [rcx], bl
 
 	%%print_digit_loop1:
 		inc rcx
