@@ -207,6 +207,47 @@ section .bss
 	pop r8
 %endmacro
 
-SYS_EXIT equ 60
+
+;------------------------------------------------------------------------------------------------
+; system calls
+SYS_EXIT 		equ 	60
+SYS_READ		equ	0
+SYS_WRITE		equ	1
+SYS_OPEN		equ 	2
+SYS_CLOSE		equ	3
+;------------------------------------------------------------------------------------------------
+
+
+;------------------------------------------------------------------------------------------------
+; file permissions
+PRMSN_XRWE 		equ 	0 ; no read, no write, not execute
+PRMSN_R 		equ 	1; permission to read
+PRMSN_W 		equ 	2; permission to write
+PRMSN_E 		equ	4; permission to execute
+; combinations of the above can be used for other permissions
+; for example 3 means permssion to write and read as 6 = PRMSN_W + PRMSN_R
+; Note that permssion number is a four digit octal number
+; the first is mostly zero
+; the second shows the permission for owner
+; the third shows the permission for group
+; the fourth shows the permission of other
+;------------------------------------------------------------------------------------------------
+
+
+;------------------------------------------------------------------------------------------------
+; file flags
+FLAG_READ_ONLY		equ 	0
+FLAG_WRITE_ONLY		equ 	1
+FLAG_READ_WRITE		equ 	2
+FLAG_CREATE		equ	64
+;------------------------------------------------------------------------------------------------
+
+
+;------------------------------------------------------------------------------------------------
+STD_IN			equ	0
+STD_OUT			equ	1
+;------------------------------------------------------------------------------------------------
+
+
 
 
