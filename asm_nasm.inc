@@ -126,7 +126,6 @@ section .bss
 ; output: the integer is saved in rax
 ; function: coverts the string of an integer to integer
 ;**************************************************************************************************
-	push rax
 	push rdx
 	push rcx
 	push rbx
@@ -159,7 +158,7 @@ section .bss
 
 		; divide r8 by 10
         	mov rax, r8
-		push rbx ; rbx hold the pointer, so we need to push it if we are going to use rbx for another purpose
+		push rbx ; rbx holds the pointer, so we need to push it if we are going to use rbx for another purpose
         	mov rbx, 10
         	div rbx
         	mov r8, rax
@@ -175,7 +174,6 @@ section .bss
 	pop rbx
 	pop rcx
 	pop rdx
-	pop rax
 %endmacro
 
 
