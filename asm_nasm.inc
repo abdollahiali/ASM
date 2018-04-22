@@ -1,3 +1,8 @@
+section .data 
+	str_rbp db "rbp = ", 0
+	str_rsp db ", rsp = ", 0
+	new_line db 10, 0
+
 section .bss
 	char_space resb 100
 
@@ -8,6 +13,7 @@ section .bss
 ; 	strlen str 				output: rdx	the str is a pointer to the string and the string ends with 0
 ; 	str2int str						 output:rax
 ; 	al_power_bl 						al^bl, output: rax
+; 	printsp str						prints str and the contenst of rbp and rsp
 ;----------------------------------------------------------------------------
 
 
@@ -203,6 +209,20 @@ section .bss
 
 	pop rbx
 	pop r8
+%endmacro
+
+%macro printsp 1
+;**************************************************************************************************
+; input: a string
+; output: none
+; function: prints the string and also the contents of of rbp and rsp followed by a new line
+;**************************************************************************************************
+	printstr %1
+	printstr str_rbp
+	printint rbp
+	printstr str_rsp
+	printint rsp
+	printstr new_line
 %endmacro
 
 
