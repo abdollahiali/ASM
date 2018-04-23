@@ -225,6 +225,36 @@ section .bss
 	printstr new_line
 %endmacro
 
+%macro printbin_long 1
+;**************************************************************************************************
+; input: an integer
+; output: none
+; function: prints 64-bit-long binary representation of the input
+;**************************************************************************************************
+	push rax
+	push rbx
+
+	mov rax, %1
+	mov rbx, 1
+	ror rbx, 1 ; rotate to right
+
+	label:
+		push rax
+		and rax, rbx
+		jnz label_print_one
+			printint 0
+			jmp label_continue
+		label_print_one:
+			printint 1
+		label_continue:
+		pop rax
+		shr rbx, 1
+		jnz label
+
+	pop rbx
+	pop rax
+%endmacro
+
 
 ;------------------------------------------------------------------------------------------------
 ; system calls
