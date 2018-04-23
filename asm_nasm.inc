@@ -256,6 +256,44 @@ section .bss
 %endmacro
 
 
+%macro printbin 1
+;**************************************************************************************************
+; input: an integer
+; output: none
+; function: prints the binary representation of the input
+;**************************************************************************************************
+	push rax
+	push rbx
+	push rdx
+	mov rdx, 0; this is used as a flag so that we do not print the zeros on the left-hand side of the binary representation
+
+	mov rax, %1
+	mov rbx, 1
+	ror rbx, 1 ; rotate to right
+
+	label:
+		push rax
+		and rax, rbx
+		jnz label_print_one
+			cmp rdx, 0
+			jz label_continue ; skip printing zero
+				printint 0
+				jmp label_continue
+		label_print_one:
+			printint 1
+			cmp rdx, 1
+			jz label_continue
+				mov rdx, 1
+		label_continue:
+		pop rax
+		shr rbx, 1
+		jnz label
+
+	pop rdx
+	pop rbx
+	pop rax
+%endmacro
+
 ;------------------------------------------------------------------------------------------------
 ; system calls
 SYS_EXIT 		equ 	60
