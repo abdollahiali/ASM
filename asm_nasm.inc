@@ -9,11 +9,15 @@ section .bss
 ;-----------------------------List of Macros---------------------------------
 ; 	MACRO								DESCRIPTION
 ; 	exit
+; 	printstr
 ; 	printint val
 ; 	strlen str 				output: rdx	the str is a pointer to the string and the string ends with 0
 ; 	str2int str						 output:rax
 ; 	al_power_bl 						al^bl, output: rax
 ; 	printsp str						prints str and the contenst of rbp and rsp
+; 	printbin_long integer					prints the binary form (64 bits version)
+; 	printbin integer					prints the binary form (without any zero on the left-hand side)
+; 	printhex integer					prints the hex form
 ;----------------------------------------------------------------------------
 
 
@@ -293,6 +297,94 @@ section .bss
 	pop rbx
 	pop rax
 %endmacro
+
+%macro printhex 1
+;**************************************************************************************************
+; input: an integer
+; output: none
+; function: prints the hex representation of the input
+;**************************************************************************************************
+	push rax
+	push rbx
+	push rdx
+	push r8
+
+	mov rdx, 0; this is used as a flag so that we do not print the zeros on the left-hand side of the binary representation
+
+	mov rax, %1
+	mov rbx, 15 ;  eqivalent to 1111 in binary
+	ror rbx, 4; rotate to right four times
+	mov r8, 0x10; rax is 16 nibble and if the left-most nibble is 1111 we can shift it 15 nibbles
+
+	printhex_label:
+		push rax
+		and rax, rbx
+		cmp r8, 1
+		jz printhex_skip_4shr
+		push r8
+		dec r8
+		printhex_loop:
+			shr rax, 4; this brings the nibble to the right-most
+			dec r8
+			jnz printhex_loop
+		
+		pop r8
+		
+		printhex_skip_4shr: 
+		cmp rax, 0
+		jnz printhex_print_nozero
+			cmp rdx, 0
+			jz printhex_continue ; skip printing zero
+				printint 0
+				jmp printhex_continue
+		printhex_print_nozero:
+			printnibble_in_hex rax
+			cmp rdx, 1
+			jz printhex_continue
+				mov rdx, 1
+		printhex_continue:
+		pop rax
+		shr rbx, 4; shift rbx one nibble to right
+		dec r8
+		jnz printhex_label
+
+	pop r8
+	pop rdx
+	pop rbx
+	pop rax
+%endmacro
+
+%macro printnibble_in_hex 1
+	push rax
+	push rdi
+	push rsi
+	push rdx
+
+	mov rax, %1
+	mov rdi, str_digit
+	cmp rax, 10
+	jl printnibble_in_hex_less_than_10
+	sub rax, 10
+	add rax, 97 ; 97 is ASCII for 'a'
+	jmp printnibble_in_hex_print_hex
+
+	printnibble_in_hex_less_than_10:
+	add rax, 48
+	
+	printnibble_in_hex_print_hex:
+	mov [rdi], rax
+	mov rax, 1
+	mov rdi, 1
+	mov rsi, str_digit
+	mov rdx, 1
+	syscall
+	
+	pop rdx
+	pop rsi
+	pop rdi
+	pop rax
+%endmacro
+
 
 ;------------------------------------------------------------------------------------------------
 ; system calls
