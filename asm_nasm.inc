@@ -3,6 +3,16 @@ section .data
 	str_rsp db ", rsp = ", 0
 	new_line db 10, 0
 
+	; data needed for pfshort
+	_str_flags db "  RF  NT  IOPL  OF  DF  IF  TF  SF ZF  AF  PF  CF", 10, 0
+	_str_one_w_space db "  1 ", 0
+	_str_zero_w_space db "  0 ", 0
+	_str_3_spaces db "   ", 0
+	_print_IOPL_str_00 db "00 ", 0
+	_print_IOPL_str_01 db "01 ", 0
+	_print_IOPL_str_10 db "10 ", 0
+	_print_IOPL_str_11 db "11 ", 0
+
 section .bss
 	char_space resb 100
 
@@ -384,6 +394,108 @@ section .bss
 	pop rdi
 	pop rax
 %endmacro
+
+
+%macro pfshort 0
+;**************************************************************************************************
+; input: none
+; output: none
+; function: prints these flags: RF  NT  IOPL  OF  DF  IF  TF  SF ZF  AF  PF  CF 
+; it uses two other macros namely _print_flag and _print_IOPL
+;**************************************************************************************************
+	push rax
+
+	pushfq
+	
+	printstr _str_flags
+	
+	;print RF (Resume flag)
+	_print_flag 0x10000
+
+	;print NT (Nested task)
+	_print_flag 0x4000
+	
+	;print IOPL (I/O privilege level)
+	_print_IOPL
+
+	;print OF (Overflow flag)
+	_print_flag 0x800
+
+	;print DF (Direction flag)
+	_print_flag 0x400
+	
+	;print IF (Interrup enable flag)
+	_print_flag 0x200
+
+	;print TF (Trap flag)
+	_print_flag 0x100
+
+	;print SF (Sign flag)
+	_print_flag 0x80
+
+	;print ZF (Zero flag)
+	_print_flag 0x40
+
+	;print AF (Adjust flag)
+	_print_flag 0x10
+
+	;print PF (Parity flag)
+	_print_flag 0x4
+
+	;print CF (Carry flag)
+	_print_flag 0x1
+
+	pop rax ;this is just to remove the rflags from the stack
+
+	pop rax
+
+	printstr new_line
+	
+%endmacro
+
+%macro _print_flag 1
+	pop rax
+	push rax
+	and rax, %1
+	cmp rax, 0
+	jz %%_print_flag_0
+	printstr _str_one_w_space
+	jmp %%_print_flag_skip_0
+	%%_print_flag_0:
+		printstr _str_zero_w_space
+	%%_print_flag_skip_0:
+%endmacro
+
+%macro _print_IOPL 0
+	pop rax
+	push rax
+	and rax, 0x3000
+	shr rax, 11
+	printstr _str_3_spaces
+	cmp rax, 0
+	jz %%_print_IOPL_print_zero
+	cmp rax, 1
+	jz %%_print_IOPL_print_one
+	cmp rax, 2
+	jz %%_print_IOPL_print_two
+	printstr _print_IOPL_str_11
+	jmp %%_print_IOPL_endmacro
+
+	%%_print_IOPL_print_zero:
+		printstr _print_IOPL_str_00
+		jmp %%_print_IOPL_endmacro
+	%%_print_IOPL_print_one:
+		printstr _print_IOPL_str_01
+		jmp %%_print_IOPL_endmacro
+	%%_print_IOPL_print_two:
+		printstr _print_IOPL_str_10
+		jmp %%_print_IOPL_endmacro
+	%%_print_IOPL_endmacro:
+%endmacro
+
+
+
+
 
 
 ;------------------------------------------------------------------------------------------------
