@@ -445,11 +445,11 @@ section .bss
 	;print CF (Carry flag)
 	_print_flag 0x1
 
-	pop rax ;this is just to remove the rflags from the stack
-
-	pop rax
+	pop rax ;this is just to remove the rflags from the stack that have been pushed by _print_flag 0x1
 
 	printstr new_line
+
+	pop rax
 	
 %endmacro
 
