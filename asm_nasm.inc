@@ -1,3 +1,31 @@
+section .text
+
+; this is an internal function used by factorial macro	
+; we assume that the n! is at most 64 bits and rax is enough to hold it
+_factorial:
+	pop rcx ; the return address
+	pop rax
+	cmp rax, 1
+	jle _factorial_label_factorial_is_one
+
+	push rcx ; the return address
+	push rax ; n
+	dec rax
+	push rax ; n-1
+	call _factorial
+	pop rbx ; (n-1)!
+	pop rax ; n
+	pop rcx ; the return address
+	mul rbx ; rax becomes n!
+	push rax
+	push rcx ; the return address
+	ret
+
+	_factorial_label_factorial_is_one:
+		push 1
+		push rcx
+		ret
+
 section .data 
 	str_rbp db "rbp = ", 0
 	str_rsp db ", rsp = ", 0
@@ -15,6 +43,8 @@ section .data
 
 section .bss
 	char_space resb 100
+
+
 
 ;-----------------------------List of Macros---------------------------------
 ; 	MACRO								DESCRIPTION
@@ -493,10 +523,25 @@ section .bss
 	%%_print_IOPL_endmacro:
 %endmacro
 
+%macro factorial 1
+;**************************************************************************************************
+; input: integer
+; output: rax (integer) 
+; function: calculates the factorial of the input
+;**************************************************************************************************
+	push rdx
+	push rbx
+	push rcx
+	
+	mov rax, %1
+	push rax
+	call _factorial
+	pop rax
 
-
-
-
+	pop rcx
+	pop rbx
+	pop rdx
+%endmacro
 
 ;------------------------------------------------------------------------------------------------
 ; system calls
@@ -537,6 +582,7 @@ FLAG_CREATE		equ	64
 STD_IN			equ	0
 STD_OUT			equ	1
 ;------------------------------------------------------------------------------------------------
+
 
 
 
