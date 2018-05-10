@@ -58,6 +58,8 @@ section .bss
 ; 	printbin_long integer					prints the binary form (64 bits version)
 ; 	printbin integer					prints the binary form (without any zero on the left-hand side)
 ; 	printhex integer					prints the hex form
+;	pfshort 						prints these flags: RF  NT  IOPL  OF  DF  IF  TF  SF ZF  AF  PF  CF 
+;	factorial n				output: rax	n!
 ;----------------------------------------------------------------------------
 
 
