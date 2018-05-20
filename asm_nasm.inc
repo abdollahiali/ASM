@@ -359,37 +359,37 @@ section .bss
 	ror rbx, 4; rotate to right four times
 	mov r8, 0x10; rax is 16 nibble and if the left-most nibble is 1111 we can shift it 15 nibbles
 
-	printhex_label:
+	%%printhex_label:
 		push rax
 		and rax, rbx
 		cmp r8, 1
-		jz printhex_skip_4shr
+		jz %%printhex_skip_4shr
 		push r8
 		dec r8
-		printhex_loop:
+		%%printhex_loop:
 			shr rax, 4; this brings the nibble to the right-most
 			dec r8
-			jnz printhex_loop
+			jnz %%printhex_loop
 		
 		pop r8
 		
-		printhex_skip_4shr: 
+		%%printhex_skip_4shr: 
 		cmp rax, 0
-		jnz printhex_print_nozero
+		jnz %%printhex_print_nozero
 			cmp rdx, 0
-			jz printhex_continue ; skip printing zero
+			jz %%printhex_continue ; skip printing zero
 				printint 0
-				jmp printhex_continue
-		printhex_print_nozero:
+				jmp %%printhex_continue
+		%%printhex_print_nozero:
 			printnibble_in_hex rax
 			cmp rdx, 1
-			jz printhex_continue
+			jz %%printhex_continue
 				mov rdx, 1
-		printhex_continue:
+		%%printhex_continue:
 		pop rax
 		shr rbx, 4; shift rbx one nibble to right
 		dec r8
-		jnz printhex_label
+		jnz %%printhex_label
 
 	pop r8
 	pop rdx
@@ -406,15 +406,15 @@ section .bss
 	mov rax, %1
 	mov rdi, _str_digit
 	cmp rax, 10
-	jl printnibble_in_hex_less_than_10
+	jl %%printnibble_in_hex_less_than_10
 	sub rax, 10
 	add rax, 97 ; 97 is ASCII for 'a'
-	jmp printnibble_in_hex_print_hex
+	jmp %%printnibble_in_hex_print_hex
 
-	printnibble_in_hex_less_than_10:
+	%%printnibble_in_hex_less_than_10:
 	add rax, 48
 	
-	printnibble_in_hex_print_hex:
+	%%printnibble_in_hex_print_hex:
 	mov [rdi], rax
 	mov rax, 1
 	mov rdi, 1
