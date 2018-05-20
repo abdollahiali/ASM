@@ -43,6 +43,7 @@ section .data
 
 section .bss
 	char_space resb 100
+	_str_digit resb 1
 
 
 
@@ -403,7 +404,7 @@ section .bss
 	push rdx
 
 	mov rax, %1
-	mov rdi, str_digit
+	mov rdi, _str_digit
 	cmp rax, 10
 	jl printnibble_in_hex_less_than_10
 	sub rax, 10
@@ -417,7 +418,7 @@ section .bss
 	mov [rdi], rax
 	mov rax, 1
 	mov rdi, 1
-	mov rsi, str_digit
+	mov rsi, _str_digit
 	mov rdx, 1
 	syscall
 	

@@ -6,8 +6,7 @@ section .data
 	str_no_arg db "The program has no argument.",10, "You need to enter a digit as argument so that the program prints it binary representation.", 10, 0
 	str_you_entered db "You entered: ", 0
 	str_hex db "Its hex representation is:", 0
-section .bss
-	str_digit resb 1
+
 
 section .text
 	global _start
