@@ -40,6 +40,8 @@ section .data
 	_print_IOPL_str_01 db "01 ", 0
 	_print_IOPL_str_10 db "10 ", 0
 	_print_IOPL_str_11 db "11 ", 0
+	_str_negative_sign db "-", 0
+
 
 section .bss
 	char_space resb 100
@@ -96,8 +98,36 @@ section .bss
 
 %endmacro
 
-%macro printint 1
+%macro printsint 1
+;**************************************************************************************************
+; input: a signed integer (immediate vale or a register or addressed)
+; output: none
+; function: prints the signed integer
+;**************************************************************************************************	
+	push rax
 
+	mov rax, %1
+	rcl rax, 1
+	jnc	%%printsint_positive_int
+	rcr rax, 1 ; reverse the "rcl rax, 1" to obtain the original value of rax
+	
+	neg rax;  this is equal to "dec rax" followed by "not rax"	
+
+	printstr _str_negative_sign
+	printint rax
+	jmp %%printsint_end
+	
+
+	%%printsint_positive_int:
+		rcr rax, 1 ; reverse the "rcl rax, 1" to obtain the original value of rax
+		printint rax
+	%%printsint_end:
+		pop rax
+%endmacro
+
+
+
+%macro printint 1
 ;**************************************************************************************************
 ; input: immediate integer or a register or address
 ; output: none
