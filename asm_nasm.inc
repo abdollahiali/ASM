@@ -285,18 +285,18 @@ section .bss
 	mov rbx, 1
 	ror rbx, 1 ; rotate to right
 
-	label:
+	%%printbin_long_label:
 		push rax
 		and rax, rbx
-		jnz label_print_one
+		jnz %%printbin_long_label_print_one
 			printint 0
-			jmp label_continue
-		label_print_one:
+			jmp %%printbin_long_label_continue
+		%%printbin_long_label_print_one:
 			printint 1
-		label_continue:
+		%%printbin_long_label_continue:
 		pop rax
 		shr rbx, 1
-		jnz label
+		jnz %%printbin_long_label
 
 	pop rbx
 	pop rax
