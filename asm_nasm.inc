@@ -84,10 +84,10 @@ section .bss
 	push rdi
 	push rsi
 	push rdx
+	mov rsi, %1 ; rsi now hold the prointer to the the string
 	
 	mov rax, 1
 	mov rdi, 1
-	mov rsi, %1 ; rsi now hold the prointer to the the string
 	strlen rsi   ; rdx now hold the length of the string
 	syscall
 
