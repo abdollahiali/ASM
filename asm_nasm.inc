@@ -63,6 +63,8 @@ section .bss
 ; 	printhex integer					prints the hex form
 ;	pfshort 						prints these flags: RF  NT  IOPL  OF  DF  IF  TF  SF ZF  AF  PF  CF 
 ;	factorial n				output: rax	n!
+;	capstr str_des, str_source 		output: str_des copies str_source into str_des 
+;                                                               and changes the lower case letters to upper cases
 ;----------------------------------------------------------------------------
 
 
@@ -575,6 +577,57 @@ section .bss
 	pop rbx
 	pop rdx
 %endmacro
+
+%macro capstr 2
+;**************************************************************************************************
+; input: str2
+; output: str1
+; format:  capstr str1, str2
+; function: copies str2, into str1 and changes all lower case letters to upper case
+;           (user have to make sure that the length of str1 be greater than or equal to the length of str2)
+;**************************************************************************************************
+	push rax
+	push rbx
+	push rdx
+	push rdi
+
+	mov rdi, %1 ; destination address
+	mov rax, %2	; source address
+	push rdi
+
+
+	strlen rax ; rdx contains the length of the string
+	capstr_label:
+		mov bl, [rax]
+		cmp bl, 'a'
+		jge capstr_ge_a
+		mov [rdi], bl
+		jmp capstr_skip
+
+		capstr_ge_a:
+			cmp bl, 'z'
+			jle capstr_le_z
+			mov [rdi], bl
+			jmp capstr_skip
+
+		capstr_le_z:
+			sub bl, 'a'
+			add bl, 'A'
+			mov [rdi], bl
+
+		capstr_skip:
+			inc rax
+			inc rdi
+			dec rdx
+			jnz capstr_label
+	mov [rdi], dl ;add NULL (note that 'dl' is zero now)
+
+	pop rdi
+	pop rdx
+	pop rbx
+	pop rax
+%endmacro
+
 
 ;------------------------------------------------------------------------------------------------
 ; system calls
