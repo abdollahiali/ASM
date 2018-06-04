@@ -296,12 +296,16 @@ section .bss
 ; output: none
 ; function: prints the string and also the contents of of rbp and rsp followed by a new line
 ;**************************************************************************************************
+	push rax
 	printstr %1
 	printstr str_rbp
 	printint rbp
 	printstr str_rsp
-	printint rsp
+	mov rax, rsp
+	add rax, 8 ; because printsp makes one push, this decreses rsp by 8
+	printint rax 
 	printstr new_line
+	pop rax
 %endmacro
 
 %macro printbin_long 1
